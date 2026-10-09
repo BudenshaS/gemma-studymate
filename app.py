@@ -52,12 +52,14 @@ st.markdown("""
     margin-bottom: 20px;
 }
 
+
 .answer-box {
-    padding: 18px;
-    border-radius: 12px;
-    border: 1px solid #ddd;
-    background: #fafafa;
-    line-height: 1.7;
+    background-color: #f0f4f8;
+    color: #1f2937;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #d1d5db;
+    line-height: 1.6;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -72,23 +74,23 @@ def load_embedding_model():
     return SentenceTransformer(
         EMBEDDING_MODEL
     )
-
-
 @st.cache_resource(show_spinner=False)
 def load_gemma():
+    hf_token = st.secrets["HF_TOKEN"]
+
     tokenizer = AutoTokenizer.from_pretrained(
-        LLM_MODEL
+        LLM_MODEL,
+        token=hf_token
     )
 
     model = AutoModelForCausalLM.from_pretrained(
         LLM_MODEL,
-        torch_dtype=torch.float32
+        torch_dtype=torch.float32,
+        token=hf_token
     )
 
-    model.to("cpu")
-    model.eval()
-
     return tokenizer, model
+
 
 
 # ============================================================
